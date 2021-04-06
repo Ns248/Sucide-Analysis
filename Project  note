@@ -1,0 +1,60 @@
+# Import Library 
+
+import pandas as pd
+import numpy as np
+import seaborn as sb
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+# Import Data
+
+df = pd.read_csv("Suicides in  2001-2012 (India).csv")
+df.head()
+df.tail()
+df.describe()
+df.sample(10)
+df.duplicated().any()
+df.isna().sum()
+df.Age_group.value_counts()
+df.State.value_counts()
+df = df.drop(df[df.Total==0].index)
+df.info()
+
+# 1. Highest Number of Sucide Cases by Male or Female
+
+plt.figure(figsize=(10,10))
+sb.catplot(y="Gender", x="Total",
+          hue="Age_group",
+          data=df, kind="bar")
+plt.title("for Age_group & Total")
+plt.show()
+
+# 2. Highest Sucide cases by Age_gruop wise 
+
+plt.figure(figsize=(10,10))
+sb.barplot(x='Age_group', y='Total', hue='Gender', data=df)
+plt.xticks(rotation=45)
+plt.show()
+
+plt.figure(figsize=(10,10))
+df_Age = df[df['Age_group']!='0-100+']
+age = df_Age.groupby('Age_group').sum()['Total'].plot(kind="pie", title="Age Wise Sucides")
+age.set_xlabel('\nAge Group')
+age.set_ylabel('Counts\n')
+                                     
+
+# 3.Highest Sucide Case State wise 
+
+plt.figure(figsize=[10,10])
+df = df.groupby([df.State]).sum().sort_values(by='Year',ascending=False)[0:10]
+df['Total'].plot.bar()
+plt.show
+
+# 4.Highest sucide cases year wise
+
+f, ax1 = plt.subplots(figsize=[20,10])
+sb.pointplot(x='Year', y='Total', data=df, color= 'lime',alpha=0.8)
+plt.xlabel('Year',fontsize= 20, color='blue' )
+plt.ylabel('Values',fontsize= 20, color='blue' )
+plt.title('Year - Sucide number', fontsize= 20,color='blue' )
+plt.show()
